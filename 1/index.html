@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Description du DOM</h1>
+    <ul>
+        <li>
+            Le DOM est une interface de programmation
+        </li>
+        <li>
+            L'acronyme signifie : Document Object Model
+        </li>
+        <li>
+            Il représente les noeuds interconnectés (balises) d'une page HTML
+        </li>
+    </ul>
+    <script>
+
+        let list = document.querySelector("ul") // Sert à acceder à la première liste du document
+
+        let listElements = list.querySelectorAll("li") // Sert à acceder à tous les éléments li de list
+
+        listElements.forEach(function(list){ // Changement de couleur en boucle sur les éléments de la liste
+            console.dir(list) // Connaitre toutes les propiétés d'un élément du DOM
+            list.style.color = "red" // Changer la couleur en rouge 
+        })
+
+
+
+    </script>
+</body>
+</html>

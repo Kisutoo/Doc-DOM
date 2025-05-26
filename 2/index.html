@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="board"></div>
+
+    <script>
+        
+        function shuffleChildren(parent){
+            let children = parent.children // Children équivaut aux box si l'on suit le chemin de board --> box
+            let i = children.length, k, temp // i vaut le nombre de boites et assignation de k et temp
+            while(--i > 0){  // On boucle tant que 1 oté de i est toujours positif
+                // k stocke un nombre aléatoire basé sur i
+                k = Math.floor(Math.random() * (i+1)) // temp pointe temporairement l'élément à la position k dans board
+                temp = children[k] // remplace l'élément à la position k par l'élément à la position i
+                children[k] = children[i] // place l'élément k pointé temporairement à la fin du contenu de board
+                parent.appendChild(temp) // On renvoie la box dans board
+            }
+        }
+
+        const box = document.createElement("div") // créé un élément div et l'assigne à la variable box
+        box.classList.add("box") // Donne un nom de class à l'élément souhaité
+
+        const board = document.querySelector("#board") // Assigne à la variable board, la div id board
+        
+        let nb = 1
+
+        for(let i = 1; i <= 10; i++){  // Boucle for de 1 à 10
+            let newBox = box.cloneNode() // On clone la box du dessus pour l'assigner à newBox. Le fait d'utiliser cloneNode sert à ne pas écraser l'ancienne variable à chaque tour de boucle
+            newBox.innerText = i // On inscrit du texte dans la boite en l'occurence, i qui va s'incrément au fur et à mesure que les box se créent
+            board.appendChild(newBox) // Place un élément du DOM à la fin du contenu de l'élément visé / prepend pour l'ajouter au début
+            
+            newBox.addEventListener("click", function(){ // Lorsque l'on clique sur newBox, il y a un appel de fonction
+
+                if(i == nb){ // si i est égal à nb
+                    newBox.classList.add("box-clicked") // Ajoute la class "box-clicked" à la box nouvellement crée
+                    if(nb == board.children.length){
+                        alert("VICTOIRE !") // Si nb est égal au nombre de boites du jeu, c'est que le dernier clic était sur la dernière boite -> victoire du joueur ! (il ne faut pas incrémenter nb avant !)
+                    }
+                    nb++ // Incrémentation de nb
+                }
+                else if(i > nb){
+                    alert("Erreur, recommencez !")
+                    nb = 1 // Si le numéro de la boite est supérieur à nb, c'est que le joueur a cliqué une boite trop élévée -> game over !
+                    board.querySelectorAll(".box-clicked").forEach(function(validBox){ // Séléctionne toutes les box possédant le style box-valid puis effectue une boucle appliquant la fonction du dessous
+                        validBox.classList.remove("box-clicked") // Cela retire la class valide box, ce qui retire le style inhérent à cette class
+                    })
+                }
+                else{
+                    alert("Case déjà cliquée !") // Dernière possibilité : Le joueur a cliqué sur une boite déjà grisée. On l'informe simplement de cela, le jeu ne redémarre pas.
+                    }
+            })
+        }
+
+        
+
+        shuffleChildren(board)
+
+    </script>
+</body>
+</html>
