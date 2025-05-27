@@ -39,7 +39,8 @@
 
         let chronoFonction = setInterval(chrono, 1000)
 
-        function shuffleChildren(parent){
+        function shuffleChildren(parent)
+        {
             let children = parent.children // Children équivaut aux box si l'on suit le chemin de board --> box
             let i = children.length, k, temp // i vaut le nombre de boites et assignation de k et temp
             while(--i > 0){  // On boucle tant que 1 oté de i est toujours positif
@@ -51,7 +52,8 @@
             }
         }
 
-        function showReaction(type, clickedBox){
+        function showReaction(type, clickedBox)
+        {
             clickedBox.classList.add(type)
             if(type !== "success"){
                 setTimeout(function(){ // Sert à retarder l'appel de la fonction
@@ -70,11 +72,14 @@
         
 
         
-        for(let i = 1; i <= cb; i++){  // Boucle for de 1 à nb box
-            let newBox = box.cloneNode() // On clone la box du dessus pour l'assigner à newBox. Le fait d'utiliser cloneNode sert à ne pas écraser l'ancienne variable à chaque tour de boucle
-            newBox.innerText = i // On inscrit du texte dans la boite en l'occurence, i qui va s'incrément au fur et à mesure que les box se créent
-            board.appendChild(newBox) // Place un élément du DOM à la fin du contenu de l'élément visé / prepend pour l'ajouter au début
-            newBox.addEventListener("click", function(){ // Lorsque l'on clique sur newBox, il y a un appel de fonction
+        
+        
+        function gameBox(){
+            for(let i = 1; i <= cb; i++){  // Boucle for de 1 à nb box
+                let newBox = box.cloneNode() // On clone la box du dessus pour l'assigner à newBox. Le fait d'utiliser cloneNode sert à ne pas écraser l'ancienne variable à chaque tour de boucle
+                newBox.innerText = i // On inscrit du texte dans la boite en l'occurence, i qui va s'incrément au fur et à mesure que les box se créent
+                board.appendChild(newBox) // Place un élément du DOM à la fin du contenu de l'élément visé / prepend pour l'ajouter au début
+                newBox.addEventListener("click", function(){ // Lorsque l'on clique sur newBox, il y a un appel de fonction
 
                 if(i == nb){ // si i est égal à nb
                     shuffleChildren(board);
@@ -85,7 +90,8 @@
                             })
                             clearInterval(chronoFonction)
                             participant = prompt("Quel est votre pseudo de gagnant ?") // Si nb est égal au nombre de boites du jeu, c'est que le dernier clic était sur la dernière boite -> victoire du joueur ! (il ne faut pas incrémenter nb avant !)
-                            localStorage.setItem('highScore', JSON.stringify(localKey))
+                            localKey = `${participant}-${timerElement.innerText}`;
+                            localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(localKey))
                     }
                     nb++ // Incrémentation de nb
                 }
@@ -100,11 +106,14 @@
                 else{
                     showReaction("notice", newBox) // Dernière possibilité : Le joueur a cliqué sur une boite déjà grisée. On l'informe simplement de cela, le jeu ne redémarre pas.
                     }
-            })
+                })
+            }
         }
-        const scores = document.querySelector(".scores")
+        
+        const scores = document.querySelector(".scores") /// A FAIRE : récupérer ce qu'il y a dans le local storage le mettre sous force de variable dans un tableau puis l'afficher avec alert
 
         localKey = localStorage.getItem('highScore')
+        gameBox();
         shuffleChildren(board)
         scores.addEventListener('click', function(){
                 alert(localKey)
