@@ -131,7 +131,7 @@
                             // On met le tableau (qu'il faut transformer en chaine de caractères via JSON.stringify) en valeur à la key highScores en fonction du nombre de box séléctionné
                             localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(a));
                     }
-                    // Incrémentation de nb
+                    // Incrémentation de nb dans le cas ou ce n'était pas la dernière box, le jeu continue
                     nb++ 
                 }
                 // Si on clique sur une mauvaise box
