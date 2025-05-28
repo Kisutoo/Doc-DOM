@@ -15,7 +15,7 @@
     <div id="board"></div>
 
     <script>
-        // Initialiasation des variables et de la fonction chrono en premier pour qu'il se lance directement
+        // Initialisation des variables et de la fonction chrono en premier pour qu'il se lance directement
         let timerElement = document.querySelector(".chrono")
         let temps = 0
         
@@ -50,7 +50,7 @@
         // Assigne à la variable scores, la div class clear
         const clearS = document.querySelector(".clear")
         // Variable qui stock le nombre de box que l'on souhaite créer pour le jeu
-        let cb = prompt("Veuillez indiquez le nombre de boites");
+        let cb = prompt("Veuillez indiquer le nombre de boites");
         // Variable qui stockera le nom du joueur
         let participant = "";
         // Initialisation d'un index
@@ -58,7 +58,7 @@
         // Initialisation d'un tableau pour stocker le nom et le score du joueur
         let storeScore = []
         // On envoie le tableau qui stock les info du joueur dans le tableau correspondant au highscore concerné par le nombres de box rentrées au début
-        storeScore.push(JSON.parse(localStorage.getItem(`highScore : ${cb} box`)));
+        storeScore = JSON.parse(localStorage.getItem(`highScore : ${cb} box`)) || [];
         localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(storeScore));
         
         
@@ -101,7 +101,7 @@
             // Boucle for de 1 à nb box
             for(let i = 1; i <= cb; i++){  
                 // On clone la box du dessus pour l'assigner à newBox. Le fait d'utiliser cloneNode sert à ne pas écraser l'ancienne variable à chaque tour de boucle
-                let newBox = box.cloneNode() 
+                let newBox = box.cloneNode(true) 
                 // On inscrit du texte dans la boite en l'occurence, i qui va s'incrément au fur et à mesure que les box se créent
                 newBox.innerText = i;
                 // Place un élément du DOM à la fin du contenu de l'élément visé / prepend pour l'ajouter au début

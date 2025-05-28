@@ -2,6 +2,10 @@
     display: flex;
     flex-wrap: wrap;
 }
+header, body{
+    background-color: black;
+    color: white;
+}
 
 .box{
     width: 75px;
@@ -16,6 +20,7 @@
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.8s, transform 0.8s;
+    color: black;
 }
 
 .box-clicked{
@@ -38,8 +43,9 @@
 
 .chrono{
     text-align: center;
-    font-size: 2em;
+    font-size: 3em;
     font-weight: bold;
+    padding: 2.5em 0;
 }
 
 header{
@@ -47,4 +53,8 @@ header{
     justify-content: space-between;
 }
 
+.scores, .clear{
+    font-size: 2em;
+    cursor: pointer;
+}
 
