@@ -19,9 +19,9 @@
         let timerElement = document.querySelector(".chrono")
         timerElement.innerText = temps
 
-        const high = JSON.parse(localStorage.getItem('highScore')) || []
+        
         let participant = "";
-        let localKey = `${participant}-${timerElement}`;
+        let localKey = [];
 
         
         
@@ -58,40 +58,45 @@
             if(type !== "success"){
                 setTimeout(function(){ // Sert à retarder l'appel de la fonction
                     clickedBox.classList.remove(type)
-                }, 800)
+                }, 800);
             }
         }
 
-        const box = document.createElement("div") // créé un élément div et l'assigne à la variable box
-        box.classList.add("box") // Donne un nom de class à l'élément souhaité
+        const box = document.createElement("div"); // créé un élément div et l'assigne à la variable box
+        box.classList.add("box"); // Donne un nom de class à l'élément souhaité
 
-        const board = document.querySelector("#board") // Assigne à la variable board, la div id board
+        const board = document.querySelector("#board"); // Assigne à la variable board, la div id board
         
-        let nb = 1
-        let cb = prompt("Veuillez indiquez le nombre de boites")
-        
+        let nb = 1;
+        let cb = prompt("Veuillez indiquez le nombre de boites");
+        const high = JSON.parse(localStorage.getItem(`highScore : ${cb} box`)) || [];
+        const maxScore = 0;
+        let storeScore = []
+        storeScore.push(JSON.parse(localStorage.getItem(`highScore : ${cb} box`)));
+        localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(storeScore));
 
-        
-        
-        
-        function gameBox(){
+
+        function gameBox(storeScore){
             for(let i = 1; i <= cb; i++){  // Boucle for de 1 à nb box
                 let newBox = box.cloneNode() // On clone la box du dessus pour l'assigner à newBox. Le fait d'utiliser cloneNode sert à ne pas écraser l'ancienne variable à chaque tour de boucle
-                newBox.innerText = i // On inscrit du texte dans la boite en l'occurence, i qui va s'incrément au fur et à mesure que les box se créent
-                board.appendChild(newBox) // Place un élément du DOM à la fin du contenu de l'élément visé / prepend pour l'ajouter au début
+                newBox.innerText = i; // On inscrit du texte dans la boite en l'occurence, i qui va s'incrément au fur et à mesure que les box se créent
+                board.appendChild(newBox); // Place un élément du DOM à la fin du contenu de l'élément visé / prepend pour l'ajouter au début
                 newBox.addEventListener("click", function(){ // Lorsque l'on clique sur newBox, il y a un appel de fonction
-
+                
                 if(i == nb){ // si i est égal à nb
                     shuffleChildren(board);
-                    newBox.classList.add("box-clicked") // Ajoute la class "box-clicked" à la box nouvellement crée
+                    newBox.classList.add("box-clicked"); // Ajoute la class "box-clicked" à la box nouvellement crée
                     if(nb == board.children.length){
-                        board.querySelectorAll(".box").forEach(function(box){
-                            showReaction("success", box)
+                            let a = [];
+                            board.querySelectorAll(".box").forEach(function(box){
+                                showReaction("success", box);
                             })
-                            clearInterval(chronoFonction)
-                            participant = prompt("Quel est votre pseudo de gagnant ?") // Si nb est égal au nombre de boites du jeu, c'est que le dernier clic était sur la dernière boite -> victoire du joueur ! (il ne faut pas incrémenter nb avant !)
-                            localKey = `${participant}-${timerElement.innerText}`;
-                            localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(localKey))
+                            clearInterval(chronoFonction);
+                            a = JSON.parse(localStorage.getItem(`highScore : ${cb} box`)) || [];
+                            participant = prompt("Quel est votre pseudo de gagnant ?"); // Si nb est égal au nombre de boites du jeu, c'est que le dernier clic était sur la dernière boite -> victoire du joueur ! (il ne faut pas incrémenter nb avant !)
+                            a.push(`-  ${participant} : ${timerElement.innerText} secondes\n`);
+                            localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(a));
+                            
                     }
                     nb++ // Incrémentation de nb
                 }
@@ -112,11 +117,11 @@
         
         const scores = document.querySelector(".scores") /// A FAIRE : récupérer ce qu'il y a dans le local storage le mettre sous force de variable dans un tableau puis l'afficher avec alert
 
-        localKey = localStorage.getItem('highScore')
-        gameBox();
+        localKey = localStorage.getItem(`highScore : ${cb} box`)
+        gameBox(storeScore);
         shuffleChildren(board)
         scores.addEventListener('click', function(){
-                alert(localKey)
+                alert(storeScore)
         })
     </script>
 </body>
