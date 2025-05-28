@@ -8,8 +8,9 @@
 </head>
 <body>
 <header>
-    <div class="scores">HighScore</div>
+    <div class="scores">LastScore</div>
     <div class="chrono"></div>
+    <div class="clear">Clear LastScore</div>
 </header>
     <div id="board"></div>
 
@@ -46,6 +47,8 @@
         const scores = document.querySelector(".scores")
         // Assigne à la variable board, la div id board
         const board = document.querySelector("#board");
+        // Assigne à la variable scores, la div class clear
+        const clearS = document.querySelector(".clear")
         // Variable qui stock le nombre de box que l'on souhaite créer pour le jeu
         let cb = prompt("Veuillez indiquez le nombre de boites");
         // Variable qui stockera le nom du joueur
@@ -163,6 +166,10 @@
         // Ajout d'un event qui affiche les scores quand on clique sur HighScore sur la page HTML
         scores.addEventListener('click', function(){
                 alert(storeScore)
+        })
+        // Ajout d'un event pour clear le local storage et les scores précédents
+        clearS.addEventListener('click', function(){
+                localStorage.clear()
         })
     </script>
 </body>

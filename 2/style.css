@@ -41,3 +41,10 @@
     font-size: 2em;
     font-weight: bold;
 }
+
+header{
+    display: flex;
+    justify-content: space-between;
+}
+
+
