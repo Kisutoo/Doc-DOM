@@ -14,107 +14,153 @@
     <div id="board"></div>
 
     <script>
-        
-        let temps = 0;
+        // Initialiasation des variables et de la fonction chrono en premier pour qu'il se lance directement
         let timerElement = document.querySelector(".chrono")
-        timerElement.innerText = temps
-
-        let participant = "";
-
+        let temps = 0
+        
         // Fontion qui fait office de chronomètre
         function chrono()
         {
+            
             let minutes = parseInt(temps / 60, 10);
             let secondes = parseInt(temps % 60, 10)
 
             minutes = minutes < 10 ? "0" + minutes : minutes;
             secondes = secondes < 10 ? "0" + secondes : secondes
 
+            // Remplacement du texte de TimerElement pour changer le texte à chaque appel de fonction
             timerElement.innerText = `${minutes} : ${secondes}`;
+            // Incrémentation de temps pour simuler les secondes
             temps++;
         }
-
+        // Ajout et lancement d'un interval à chrono dans le but d'executer la fonction toutes les secondes (comme un chrono)
         let chronoFonction = setInterval(chrono, 1000)
+       
+       
+        
+        // créé un élément div et l'assigne à la variable box
+        const box = document.createElement("div"); 
+        // Donne un nom de class à l'élément souhaité
+        box.classList.add("box");
+        // Assigne à la variable scores, la div class scores
+        const scores = document.querySelector(".scores")
+        // Assigne à la variable board, la div id board
+        const board = document.querySelector("#board");
+        // Variable qui stock le nombre de box que l'on souhaite créer pour le jeu
+        let cb = prompt("Veuillez indiquez le nombre de boites");
+        // Variable qui stockera le nom du joueur
+        let participant = "";
+        // Initialisation d'un index
+        let nb = 1;
+        // Initialisation d'un tableau pour stocker le nom et le score du joueur
+        let storeScore = []
+        // On envoie le tableau qui stock les info du joueur dans le tableau correspondant au highscore concerné par le nombres de box rentrées au début
+        storeScore.push(JSON.parse(localStorage.getItem(`highScore : ${cb} box`)));
+        localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(storeScore));
+        
+        
 
         // Fonction qui sert à mélanger les boite dans le but de compléxifier le jeu
         function shuffleChildren(parent)
         {
-            let children = parent.children // Children équivaut aux box si l'on suit le chemin de board --> box
-            let i = children.length, k, temp // i vaut le nombre de boites et assignation de k et temp
-            while(--i > 0){  // On boucle tant que 1 oté de i est toujours positif
+            // Children équivaut aux box si l'on suit le chemin de board --> box
+            let children = parent.children 
+             // i vaut le nombre de boites et assignation de k et temp
+            let i = children.length, k, temp
+            // On boucle tant que 1 oté de i est toujours positif
+            while(--i > 0){  
                 // k stocke un nombre aléatoire basé sur i
-                k = Math.floor(Math.random() * (i+1)) // temp pointe temporairement l'élément à la position k dans board
-                temp = children[k] // remplace l'élément à la position k par l'élément à la position i
-                children[k] = children[i] // place l'élément k pointé temporairement à la fin du contenu de board
-                parent.appendChild(temp) // On renvoie la box dans board
+                k = Math.floor(Math.random() * (i+1)) 
+                // remplace l'élément à la position k par l'élément à la position i / temp pointe temporairement l'élément à la position k dans board
+                temp = children[k] 
+                // place l'élément k pointé temporairement à la fin du contenu de board
+                children[k] = children[i] 
+                // On renvoie la box dans board
+                parent.appendChild(temp) 
             }
         }
 
+        // Fonction qui sert à modifier la box en fonction de l'état du jeu
         function showReaction(type, clickedBox)
         {
             clickedBox.classList.add(type)
             if(type !== "success"){
-                setTimeout(function(){ // Sert à retarder l'appel de la fonction
+                // Sert à retarder l'appel de la fonction
+                setTimeout(function(){ 
+                    // Retire la class de la box
                     clickedBox.classList.remove(type)
                 }, 800);
             }
         }
 
-        const box = document.createElement("div"); // créé un élément div et l'assigne à la variable box
-        box.classList.add("box"); // Donne un nom de class à l'élément souhaité
-
-        const board = document.querySelector("#board"); // Assigne à la variable board, la div id board
-        
-        let nb = 1;
-        let cb = prompt("Veuillez indiquez le nombre de boites");
-        let storeScore = []
-        storeScore.push(JSON.parse(localStorage.getItem(`highScore : ${cb} box`)));
-        localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(storeScore));
-
-
+        // Fonction qui met en place le jeux des box et gère les règles de celui ci
         function gameBox(storeScore){
-            for(let i = 1; i <= cb; i++){  // Boucle for de 1 à nb box
-                let newBox = box.cloneNode() // On clone la box du dessus pour l'assigner à newBox. Le fait d'utiliser cloneNode sert à ne pas écraser l'ancienne variable à chaque tour de boucle
-                newBox.innerText = i; // On inscrit du texte dans la boite en l'occurence, i qui va s'incrément au fur et à mesure que les box se créent
-                board.appendChild(newBox); // Place un élément du DOM à la fin du contenu de l'élément visé / prepend pour l'ajouter au début
-                newBox.addEventListener("click", function(){ // Lorsque l'on clique sur newBox, il y a un appel de fonction
-                
-                if(i == nb){ // si i est égal à nb
+            // Boucle for de 1 à nb box
+            for(let i = 1; i <= cb; i++){  
+                // On clone la box du dessus pour l'assigner à newBox. Le fait d'utiliser cloneNode sert à ne pas écraser l'ancienne variable à chaque tour de boucle
+                let newBox = box.cloneNode() 
+                // On inscrit du texte dans la boite en l'occurence, i qui va s'incrément au fur et à mesure que les box se créent
+                newBox.innerText = i;
+                // Place un élément du DOM à la fin du contenu de l'élément visé / prepend pour l'ajouter au début
+                board.appendChild(newBox); 
+                // Lorsque l'on clique sur newBox, il y a un appel de fonction
+                newBox.addEventListener("click", function(){ 
+                // si i est égal à nb
+                if(i == nb){ 
+                    // Appel de la fonction pour mélanger les box
                     shuffleChildren(board);
-                    newBox.classList.add("box-clicked"); // Ajoute la class "box-clicked" à la box nouvellement crée
-                    if(nb == board.children.length){ // Si on a cliqué sur toutes les box dans le bon ordre (jeu fini)
+                    // Ajoute la class "box-clicked" à la box nouvellement crée
+                    newBox.classList.add("box-clicked");
+                    // Si on a cliqué sur toutes les box dans le bon ordre (jeu fini)
+                    if(nb == board.children.length){ 
+                            // Initialisation d'un tableau pour stocker le nom et le temps du joueur
                             let a = [];
-                            board.querySelectorAll(".box").forEach(function(box){ // Toutes les box deviennent vertes
+                            // Toutes les box deviennent vertes
+                            board.querySelectorAll(".box").forEach(function(box){ 
+                                // Appel de la fonction showReaction pour appliquer la class "success" à toutes les box via la boucle forEach
                                 showReaction("success", box);
                             })
-                            clearInterval(chronoFonction); // Arrêt du chrono
+                            // Arrêt du chrono, on met fin à l'appel de fonction en boucle mis en place avec setInterval, grace à clearInterval
+                            clearInterval(chronoFonction);
+                            // On récupères les précédents highScore si il y en a déjà eu avec ce nombre de box et on les mets dans la variable
                             a = JSON.parse(localStorage.getItem(`highScore : ${cb} box`)) || [];
-                            participant = prompt("Quel est votre pseudo de gagnant ?");   // On enregistre le score dans le local storage
-                            a.push(`-  ${participant} : ${timerElement.innerText} secondes\n`);
+                            // On demande un pseudo à rentrer que l'on stockera dans la variable participant
+                            participant = prompt("Quel est votre pseudo de gagnant ?"); 
+                            // On envoie dans le tableau précédemment crée, le nom et le score du participant  
+                            a.push(`-  ${participant} : ${timerElement.innerText}\n`);
+                            // On met le tableau (qu'il faut transformer en chaine de caractères via JSON.stringify) en valeur à la key highScores en fonction du nombre de box séléctionné
                             localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(a));
                     }
-                    nb++ // Incrémentation de nb
+                    // Incrémentation de nb
+                    nb++ 
                 }
-                else if(i > nb){ // Si on clique sur une mauvaise box
+                // Si on clique sur une mauvaise box
+                else if(i > nb){ 
+                    // On ajoute puis supprime la class error via la fonction showReaction dans le but d'informer le joueur via une animation css, qu'il s'est trompé
                     showReaction("error", newBox)
-                    nb = 1 // Si le numéro de la boite est supérieur à nb, c'est que le joueur a cliqué une boite trop élévée -> game over !
-                    board.querySelectorAll(".box-clicked").forEach(function(validBox){ // Séléctionne toutes les box possédant le style box-valid puis effectue une boucle appliquant la fonction du dessous
-                        validBox.classList.remove("box-clicked") // Cela retire la class valide box, ce qui retire le style inhérent à cette class
+                    // Si le numéro de la boite est supérieur à nb, c'est que le joueur a cliqué une boite trop élévée -> game over !
+                    nb = 1
+                    // Séléctionne toutes les box possédant le style box-valid puis effectue une boucle appliquant la fonction du dessous
+                    board.querySelectorAll(".box-clicked").forEach(function(validBox){
+                        // Cela retire la class valide box, ce qui retire le style inhérent à cette class
+                        validBox.classList.remove("box-clicked") 
+                    // On remélange toutes les box dans le but de recommencer à 0
                     shuffleChildren(board);
                     })
                 }
                 else{
-                    showReaction("notice", newBox) // Dernière possibilité : Le joueur a cliqué sur une boite déjà grisée. On l'informe simplement de cela, le jeu ne redémarre pas.
+                    // Dernière possibilité : Le joueur a cliqué sur une boite déjà grisée. On l'informe simplement de cela, le jeu ne redémarre pas.
+                    showReaction("notice", newBox) 
                     }
                 })
             }
         }
         
-        const scores = document.querySelector(".scores") /// A FAIRE : récupérer ce qu'il y a dans le local storage le mettre sous force de variable dans un tableau puis l'afficher avec alert
-        
-        
+        // Appel de la fonction qui initialise les box en fonction de combien on en veux
         gameBox(storeScore);
+        // Appel de la fonction qui mélange toutes ces box
         shuffleChildren(board)
+        // Ajout d'un event qui affiche les scores quand on clique sur HighScore sur la page HTML
         scores.addEventListener('click', function(){
                 alert(storeScore)
         })
