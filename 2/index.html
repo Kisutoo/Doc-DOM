@@ -19,12 +19,9 @@
         let timerElement = document.querySelector(".chrono")
         timerElement.innerText = temps
 
-        
         let participant = "";
-        let localKey = [];
 
-        
-        
+        // Fontion qui fait office de chronomètre
         function chrono()
         {
             let minutes = parseInt(temps / 60, 10);
@@ -39,6 +36,7 @@
 
         let chronoFonction = setInterval(chrono, 1000)
 
+        // Fonction qui sert à mélanger les boite dans le but de compléxifier le jeu
         function shuffleChildren(parent)
         {
             let children = parent.children // Children équivaut aux box si l'on suit le chemin de board --> box
@@ -69,8 +67,6 @@
         
         let nb = 1;
         let cb = prompt("Veuillez indiquez le nombre de boites");
-        const high = JSON.parse(localStorage.getItem(`highScore : ${cb} box`)) || [];
-        const maxScore = 0;
         let storeScore = []
         storeScore.push(JSON.parse(localStorage.getItem(`highScore : ${cb} box`)));
         localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(storeScore));
@@ -86,21 +82,20 @@
                 if(i == nb){ // si i est égal à nb
                     shuffleChildren(board);
                     newBox.classList.add("box-clicked"); // Ajoute la class "box-clicked" à la box nouvellement crée
-                    if(nb == board.children.length){
+                    if(nb == board.children.length){ // Si on a cliqué sur toutes les box dans le bon ordre (jeu fini)
                             let a = [];
-                            board.querySelectorAll(".box").forEach(function(box){
+                            board.querySelectorAll(".box").forEach(function(box){ // Toutes les box deviennent vertes
                                 showReaction("success", box);
                             })
-                            clearInterval(chronoFonction);
+                            clearInterval(chronoFonction); // Arrêt du chrono
                             a = JSON.parse(localStorage.getItem(`highScore : ${cb} box`)) || [];
-                            participant = prompt("Quel est votre pseudo de gagnant ?"); // Si nb est égal au nombre de boites du jeu, c'est que le dernier clic était sur la dernière boite -> victoire du joueur ! (il ne faut pas incrémenter nb avant !)
+                            participant = prompt("Quel est votre pseudo de gagnant ?");   // On enregistre le score dans le local storage
                             a.push(`-  ${participant} : ${timerElement.innerText} secondes\n`);
                             localStorage.setItem(`highScore : ${cb} box`, JSON.stringify(a));
-                            
                     }
                     nb++ // Incrémentation de nb
                 }
-                else if(i > nb){
+                else if(i > nb){ // Si on clique sur une mauvaise box
                     showReaction("error", newBox)
                     nb = 1 // Si le numéro de la boite est supérieur à nb, c'est que le joueur a cliqué une boite trop élévée -> game over !
                     board.querySelectorAll(".box-clicked").forEach(function(validBox){ // Séléctionne toutes les box possédant le style box-valid puis effectue une boucle appliquant la fonction du dessous
@@ -116,8 +111,8 @@
         }
         
         const scores = document.querySelector(".scores") /// A FAIRE : récupérer ce qu'il y a dans le local storage le mettre sous force de variable dans un tableau puis l'afficher avec alert
-
-        localKey = localStorage.getItem(`highScore : ${cb} box`)
+        
+        
         gameBox(storeScore);
         shuffleChildren(board)
         scores.addEventListener('click', function(){
